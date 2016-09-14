@@ -36,7 +36,7 @@
 ##' @import genefilter
 ##' @export
 ##' @examples 
-##' data(study.eg)
+##' data(pathwayDatabase)
 
 MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2, 
   SDFilter=0.2, FDRCutoff=0.3, edgeCutoff=0.004, MCSteps=500, 

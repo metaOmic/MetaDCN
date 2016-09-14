@@ -64,7 +64,7 @@ Detect meta-analysis differential co-expression network (DCN)
 This function will generate basic modules and supermodules
 }
 \examples{
-data(study.eg)
+data(pathwayDatabase)
 }
 \author{
 Li Zhu
