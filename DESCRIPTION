@@ -1,0 +1,16 @@
+Package: MetaDCN
+Type: Package
+Title: Meta-analysis framework for differential coexpression network (DCN) detection 
+Version: 0.0-1
+Date: 2016-07-21
+Author: Li Zhu [aut]
+Maintainer: Li Zhu <liz86@pitt.edu>
+Depends: snow, snowfall, igraph, genefilter, R(>= 2.14.1)
+Suggests: 
+Description: Generate differential coexpression network (DCN).
+License: GPL-2
+Collate: 'MetaDCN_main.R' 'Functions_internal.R' 'Module_assembly_internal.R'
+        'Module_search_internal.R' 'Module_search_permute_internal.R' 'Network_Generation_internal.R'
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2016-06-27 19:33:35 UTC; Administrator
