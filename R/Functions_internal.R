@@ -182,7 +182,7 @@ addNode <- function(x, trialSet) {
   if (length(trialSet) == 0) {
     trialSet <- NA
   }
-  if(length(trialSet) == 0 | is.na(trialSet) == 1) {
+  if(length(trialSet) == 0 | all(is.na(trialSet)) == 1) {
     temp <- NULL
     temp$x <- x
     temp$trialSet <- NA
