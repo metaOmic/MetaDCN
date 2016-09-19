@@ -22,7 +22,6 @@
 ##' modules to be used
 ##' @param outputFigure TRUE/FALSE to specify if figures are generated
 ##' @param outputPrefix a character string for output file prefix
-##' @param parallel TRUE/FALSE to specify if parallel computing to be used
 ##' @param CPUNumbers a number to specify how many CPUs are used for parallel,
 ##' must be less than permutationTimes
 ##' @param pathwayDatabase a list with each element as a vector of 
@@ -41,10 +40,10 @@
 MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2, 
   SDFilter=0.2, FDRCutoff=0.3, edgeCutoff=0.004, MCSteps=500, 
   jaccardCutoff=0.8, permutationTimes=10, repeatTimes=10, outputFigure=TRUE, 
-  outputPrefix="MetaDCN", parallel=FALSE, CPUNumbers=10, pathwayDatabase, 
+  outputPrefix="MetaDCN", CPUNumbers=1, pathwayDatabase, 
   silent=FALSE){
   
-  if(parallel == TRUE){
+  if(CPUNumbers > 1){
     if(CPUNumbers > permutationTimes){
       stop("CPUNumbers should be smaller than or equal to permutationTimes!")
     }else if(CPUNumbers < 2){
@@ -66,7 +65,7 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
     permuteIndex=NA, silent=FALSE) 
 
   ### generate network and search modules for permutations
-  if (parallel == TRUE){
+  if (CPUNumbers > 1){
     paraRep <- round(permutationTimes/CPUNumbers)
     CPUNumbers2 <- permutationTimes%%CPUNumbers
 

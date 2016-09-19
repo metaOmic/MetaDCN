@@ -7,8 +7,8 @@
 MetaDCN(data, labels, caseName, controlName, meanFilter = 0.2,
   SDFilter = 0.2, FDRCutoff = 0.3, edgeCutoff = 0.004, MCSteps = 500,
   jaccardCutoff = 0.8, permutationTimes = 10, repeatTimes = 10,
-  outputFigure = TRUE, outputPrefix = "MetaDCN", parallel = FALSE,
-  CPUNumbers = 10, pathwayDatabase, silent = FALSE)
+  outputFigure = TRUE, outputPrefix = "MetaDCN", CPUNumbers = 1,
+  pathwayDatabase, silent = FALSE)
 }
 \arguments{
 \item{data}{a list of matrix (study) with row names as genes and column 
@@ -43,8 +43,6 @@ modules to be used}
 \item{outputFigure}{TRUE/FALSE to specify if figures are generated}
 
 \item{outputPrefix}{a character string for output file prefix}
-
-\item{parallel}{TRUE/FALSE to specify if parallel computing to be used}
 
 \item{CPUNumbers}{a number to specify how many CPUs are used for parallel,
 must be less than permutationTimes}
