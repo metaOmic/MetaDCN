@@ -73,11 +73,11 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
       pathwayIndex <- which(names(pathwayDatabase) == pathwayName)
       
       if (length(groupGenes) >= 3) {
-        temp1 <- lapply(apply(combn(1:length(groupGenes), 2), 2, list), unlist)
-        temp2 <- lapply(apply(combn(1:length(groupGenes), 3), 2, list), unlist)
+        temp1 <- lapply(apply(matrix(combn(1:length(groupGenes), 2),nrow=2), 2, list), unlist)
+        temp2 <- lapply(apply(matrix(combn(1:length(groupGenes), 3),nrow=3), 2, list), unlist)
         allCombination <- c(temp1,temp2)
         }else{
-          temp1 <- lapply(apply(combn(1:length(groupGenes), 2), 2, list), unlist)
+          temp1 <- lapply(apply(matrix(combn(1:length(groupGenes), 2),nrow=2), 2, list), unlist)
           allCombination <- temp1
         }
         pvalueTmp <- array(0,dim=length(allCombination))
