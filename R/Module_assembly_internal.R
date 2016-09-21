@@ -58,10 +58,10 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   
   pathwayThreshold <- 0.05
   topModuleAssembly <- 150
-  moduleAssemblySummary <- matrix(0, nrow=topModuleAssembly, ncol=12)
-  colnames(moduleAssemblySummary) <- c("pathway_name", "p_value", "size", 
-    "gene_in_set", "q_value", "module_num", "module_index","density1",
-    "density2", "mean_diff", "sd_diff", "gene_in_path")
+  moduleAssemblySummary <- matrix(0, nrow=topModuleAssembly, ncol=13)
+  colnames(moduleAssemblySummary) <- c("pathway_name", "pathway_size",
+    "p_value", "size", "gene_in_set", "q_value", "module_num", 
+    "module_index","density1","density2", "mean_diff", "sd_diff", "gene_in_path")
   count <- 0
   for (i in 1:topModuleAssembly) {
     pathwayName <- rownames(summaryPathwayEnrichmentSort)[i]
@@ -168,21 +168,22 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
         if (length(indexComb) >= 1) {
           count <- count+1
           moduleAssemblySummary[count, 1] <- pathwayName
-          moduleAssemblySummary[count, 2] <- enrichPvalue
-          moduleAssemblySummary[count, 3] <- length(groupGenesUnique)
-          moduleAssemblySummary[count, 4] <- length(matchPathwayGenes)
-          moduleAssemblySummary[count, 6] <- length(indexComb)
-          moduleAssemblySummary[count, 7] <- paste(forBackIndex[indexModuleEnrichPathway[indexComb]],collapse=",", sep="")
-          moduleAssemblySummary[count, 8] <- paste(format(density1, digits=2),
+          moduleAssemblySummary[count, 2] <- length(pathwayDatabase$pathwayName)
+          moduleAssemblySummary[count, 3] <- enrichPvalue
+          moduleAssemblySummary[count, 4] <- length(groupGenesUnique)
+          moduleAssemblySummary[count, 5] <- length(matchPathwayGenes)
+          moduleAssemblySummary[count, 7] <- length(indexComb)
+          moduleAssemblySummary[count, 8] <- paste(forBackIndex[indexModuleEnrichPathway[indexComb]],collapse=",", sep="")
+          moduleAssemblySummary[count, 9] <- paste(format(density1, digits=2),
             collapse="//")
-          moduleAssemblySummary[count, 9] <- paste(format(density2, digits=2),
+          moduleAssemblySummary[count, 20] <- paste(format(density2, digits=2),
             collapse="//")
-          moduleAssemblySummary[count, 10] <- meanDiff
-          moduleAssemblySummary[count, 11] <- sdDiff
+          moduleAssemblySummary[count, 11] <- meanDiff
+          moduleAssemblySummary[count, 12] <- sdDiff
           indexPath <- which(names(pathwayDatabase) == pathwayName)
           intersectGene <- intersect(toupper(pathwayDatabase[[indexPath]]),
             toupper(groupGenesUnique))
-          moduleAssemblySummary[count, 12] <- paste(intersectGene, 
+          moduleAssemblySummary[count, 13] <- paste(intersectGene, 
             collapse=",")
         }
       }else{
@@ -196,14 +197,16 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     system(paste("rm ", "GO*.txt ", "KEGG*.txt ", "REACTOME*.txt ", 
       "BIOCARTA*.txt", sep=""))
     
-    moduleAssemblySummary[,5] <- p.adjust(as.numeric(moduleAssemblySummary[,2])
+    moduleAssemblySummary[,6] <- p.adjust(as.numeric(moduleAssemblySummary[,2])
       ,method="BH")
     moduleAssemblySummary <- moduleAssemblySummary[order(as.numeric(
-      moduleAssemblySummary[,5])),]
+      moduleAssemblySummary[,6])),]
     
     write.csv(moduleAssemblySummary, 
       file=paste(outputPrefix, "_module_assembly_summary_weight_", 
-        weightChosen, ".csv", sep=""))  
+        weightChosen, ".csv", sep=""))
+
+    return(moduleAssemblySummary)      
   }
 
 

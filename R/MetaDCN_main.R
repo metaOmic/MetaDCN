@@ -51,6 +51,8 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
     }
   }
   
+  res <- list()
+
   caseIndex <- sapply(1:length(data), function(x) 
     which(labels[[x]] == caseName))
   controlIndex <- sapply(1:length(data), function(x) 
@@ -188,6 +190,8 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
     cat(paste("w1 parameter chosen is:", weightList[indexMax], "\n"))
   }
 
+  res$w1 <- weightList[indexMax]
+
   weightTempIndex <- which(colnames(forwardList) == paste("FDR_", 
     round(FDRCutoff*100), sep=""))
   forwardNum <- forwardList[indexMax, weightTempIndex]
@@ -202,8 +206,13 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
     cat(paste(backwardNum, "modules are generated in backward direction\n"))
   }
   
+  res$ModuleInCase <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", forward "_", res$w1, ".csv", sep=""))
+  res$ModuleInControl <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", backward, "_", res$w1, ".csv", sep=""))
+
   ### use the parameters to do module assembly
-  ModuleAssembly(weightList[indexMax], FDRCutoff, caseName, controlName, 
-    pathwayDatabase, permutationTimes, outputPrefix)
+  res$supermodule <- ModuleAssembly(weightList[indexMax], FDRCutoff, caseName, 
+    controlName, pathwayDatabase, permutationTimes, outputPrefix)
+
+  return(res)
 }
 
