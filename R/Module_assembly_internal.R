@@ -16,6 +16,9 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   set.seed(1234)
 
   pathwayDatabase <- pathwayDatabase[sapply(pathwayDatabase,length) < 250]
+  pathLength <- sapply(1:length(pathwayDatabase), function(x) 
+    length(pathwayDatabase[[x]]))
+  names(pathLength) <- names(pathwayDatabase)
   summaryFDRModules <- read.csv(paste(outputPrefix, 
     "_summary_FDR_weight_forward_", weightChosen, ".csv", sep=""))
   summaryFDRModules1 <- read.csv(paste(outputPrefix, 
@@ -168,7 +171,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
         if (length(indexComb) >= 1) {
           count <- count+1
           moduleAssemblySummary[count, 1] <- pathwayName
-          moduleAssemblySummary[count, 2] <- length(pathwayDatabase$pathwayName)
+          moduleAssemblySummary[count, 2] <- pathLength[pathwayName]
           moduleAssemblySummary[count, 3] <- enrichPvalue
           moduleAssemblySummary[count, 4] <- length(groupGenesUnique)
           moduleAssemblySummary[count, 5] <- length(matchPathwayGenes)
@@ -176,7 +179,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
           moduleAssemblySummary[count, 8] <- paste(forBackIndex[indexModuleEnrichPathway[indexComb]],collapse=",", sep="")
           moduleAssemblySummary[count, 9] <- paste(format(density1, digits=2),
             collapse="//")
-          moduleAssemblySummary[count, 20] <- paste(format(density2, digits=2),
+          moduleAssemblySummary[count, 10] <- paste(format(density2, digits=2),
             collapse="//")
           moduleAssemblySummary[count, 11] <- meanDiff
           moduleAssemblySummary[count, 12] <- sdDiff
