@@ -93,7 +93,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
   rownames(thresholdList) <- weight1List
   colnames(thresholdList) <- c("FDR_10","FDR_20","FDR_30","FDR_40")
   for(weightTmp in weight1List){
-    system(paste("mkdir /",weightTmp,"BasicModulePlot/",sep=""))
+    #system(paste("mkdir /",weightTmp,"BasicModulePlot/",sep=""))
     countWeight <- countWeight+1;
     countWeight1 <- countWeight1+1;
     set.seed(1234)
@@ -228,8 +228,8 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
         ###print the final configuration
         pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,topNum=3, sort=TRUE)
         if (outputFigure == TRUE) {
-          pdf(file=paste("/",weightTmp,"BasicModulePlot/",outputPrefix, 
-            "_figure_weight_", weightTmp, "_",direction, "_component_", 
+          pdf(file=paste(outputPrefix, "_figure_weight_", weightTmp, 
+            "_",direction, "_component_", 
             ccc, "_repeat_", rrr,".pdf", sep=""), width=7, height=6)
           printNetworks(data, geneNameRepeat[[rrr]], studyName, 
             nodeName=genes1, a=2, b=studyNum)
