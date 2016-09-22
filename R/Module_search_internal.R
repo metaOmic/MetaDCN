@@ -93,6 +93,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
   rownames(thresholdList) <- weight1List
   colnames(thresholdList) <- c("FDR_10","FDR_20","FDR_30","FDR_40")
   for(weightTmp in weight1List){
+    system(paste("mkdir /",weightTmp,"BasicModulePlot/",sep=""))
     countWeight <- countWeight+1;
     countWeight1 <- countWeight1+1;
     set.seed(1234)
@@ -227,18 +228,27 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
         ###print the final configuration
         pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,topNum=3, sort=TRUE)
         if (outputFigure == TRUE) {
-          for(plotIndex in 1:3) {
-            inSetGene <- strsplit(pathwayInfo[plotIndex, 7], split="/")[[1]]
-            pathwayName <- rownames(pathwayInfo)[plotIndex]
-            if(length(inSetGene) < 2) {
-              next
+          pdf(file=paste("/",weightTmp,"BasicModulePlot/",outputPrefix, 
+            "_figure_weight_", weightTmp, "_",direction, "_component_", 
+            ccc, "_repeat_", rrr,".pdf", sep=""), width=7, height=6)
+          printNetworks(data, geneNameRepeat[[rrr]], studyName, 
+            nodeName=genes1, a=2, b=studyNum)
+          dev.off()
+
+          if(F){
+            for(plotIndex in 1:3) {
+              inSetGene <- strsplit(pathwayInfo[plotIndex, 7], split="/")[[1]]
+              pathwayName <- rownames(pathwayInfo)[plotIndex]
+              if(length(inSetGene) < 2) {
+                next
+              }
+              pdf(file=paste(outputPrefix, "_figure_weight_", weightTmp, "_",
+                direction, "_component_", ccc, "_repeat_", rrr, "_pathway_", 
+                pathwayName, ".pdf", sep=""), width=7, height=5)
+              printNetworks(data, geneNameRepeat[[rrr]], studyName, 
+                nodeName=genes1, a=2, b=studyNum, inSetGene=inSetGene)
+              dev.off()
             }
-            pdf(file=paste(outputPrefix, "_figure_weight_", weightTmp, "_",
-              direction, "_component_", ccc, "_repeat_", rrr, "_pathway_", 
-              pathwayName, ".pdf", sep=""), width=7, height=5)
-            printNetworks(data, geneNameRepeat[[rrr]], studyName, 
-              nodeName=genes1, a=2, b=studyNum, inSetGene=inSetGene)
-            dev.off()
           }
         }
         
@@ -300,12 +310,12 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
       write.csv(pathwayResult1, file=paste(outputPrefix, "_summary_pathway_",
        direction, "_", weightTmp, ".csv", sep=""))
     }
-    if (outputFigure == TRUE) {
-      temp <- paste(outputPrefix,"_network_plot", direction, "_weight_",weightTmp, ".zip", sep="")
-      system(paste("zip -q", temp, paste(outputPrefix, "_figure_weight_",weightTmp, "_", direction, "*.pdf", sep="")))
-      unlink(paste(outputPrefix, "_figure_weight_", weightTmp, "_", 
-      direction, "_*.pdf", sep=""))
-    }
+    #if (outputFigure == TRUE) {
+      #temp <- paste(outputPrefix,"_network_plot", direction, "_weight_",weightTmp, ".zip", sep="")
+      #system(paste("zip -q", temp, paste(outputPrefix, "_figure_weight_",weightTmp, "_", direction, "*.pdf", sep="")))
+      #unlink(paste(outputPrefix, "_figure_weight_", weightTmp, "_", 
+      #direction, "_*.pdf", sep=""))
+    #}
   }
   write.csv(thresholdList, file=paste(outputPrefix, "_threshold_list_", 
     direction, ".csv", sep=""))

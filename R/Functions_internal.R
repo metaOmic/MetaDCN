@@ -118,17 +118,12 @@ ttest <- function(x,y,...) {
   }
 }
 
-printNetworks <- function(data, memberIndex, studyName, nodeName, a, b, 
-  inSetGene){
+printNetworks <- function(data, memberIndex, studyName, nodeName, a, b){
   par(mfrow=c(a,b), oma=c(0,0,0,0), mar=c(0,0,0,0), mgp=c(0,0,0), cex.main=1)
   studyNum <- length(data)
   half1 <- 1:(studyNum/2)
   half2 <- (studyNum/2+1):studyNum
-  highlightIndex <- intersect(intersect(toupper(inSetGene), 
-    toupper(nodeName)), memberIndex)
   col <- array("grey",length(memberIndex))
-  col[match(highlightIndex, memberIndex)] <- "red"
-  col[-match(highlightIndex, memberIndex)] <- "grey"
   densityTemp <- lapply(1:length(data), function(x) igraph::graph.adjacency(
     data[[x]][memberIndex, memberIndex], mode="undirected", add.colnames=NA, 
     add.rownames=NA))
