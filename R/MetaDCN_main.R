@@ -205,11 +205,17 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
     cat(paste(forwardNum, "modules are generated in forward direction\n"))
     cat(paste(backwardNum, "modules are generated in backward direction\n"))
   }
-  
-  res$ModuleInCase <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", 
-    "forward", "_", res$w1, ".csv", sep=""))
-  res$ModuleInControl <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", 
-    "backward", "_", res$w1, ".csv", sep=""))
+
+  ModuleInCase <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", 
+    "forward", "_", res$w1, ".csv", sep=""),header=TRUE, row.names=1)
+  rownames(ModuleInCase)<-NULL
+  res$ModuleInCase <- ModuleInCase[which(ModuleInCase[,"FDR"] < FDRCutoff),]
+
+  ModuleInControl <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", 
+    "backward", "_", res$w1, ".csv", sep=""),header=TRUE, row.names=1)
+  rownames(ModuleInControl)<-NULL
+  res$ModuleInControl <- ModuleInControl[which(ModuleInControl[,"FDR"] < 
+    FDRCutoff),]
 
   ### use the parameters to do module assembly
   res$supermodule <- ModuleAssembly(weightList[indexMax], FDRCutoff, caseName, 
