@@ -228,28 +228,13 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
         ###print the final configuration
         pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,topNum=3, sort=TRUE)
         if (outputFigure == TRUE) {
-          pdf(file=paste(outputPrefix, "_figure_weight_", weightTmp, 
+          png(file=paste(outputPrefix, "_figure_weight_", weightTmp, 
             "_",direction, "_component_", 
-            ccc, "_repeat_", rrr,".pdf", sep=""), width=7, height=6)
+            ccc, "_repeat_", rrr,".png", sep=""), width = 600, 
+          height = 480, units = "px", pointsize = 18)
           printNetworks(data, geneNameRepeat[[rrr]], studyName, 
             nodeName=genes1, a=2, b=studyNum)
           dev.off()
-
-          if(F){
-            for(plotIndex in 1:3) {
-              inSetGene <- strsplit(pathwayInfo[plotIndex, 7], split="/")[[1]]
-              pathwayName <- rownames(pathwayInfo)[plotIndex]
-              if(length(inSetGene) < 2) {
-                next
-              }
-              pdf(file=paste(outputPrefix, "_figure_weight_", weightTmp, "_",
-                direction, "_component_", ccc, "_repeat_", rrr, "_pathway_", 
-                pathwayName, ".pdf", sep=""), width=7, height=5)
-              printNetworks(data, geneNameRepeat[[rrr]], studyName, 
-                nodeName=genes1, a=2, b=studyNum, inSetGene=inSetGene)
-              dev.off()
-            }
-          }
         }
         
         summary[count+rrr,] <- c(ccc, rrr, paste(geneNameRepeat[[rrr]], 
