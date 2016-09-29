@@ -283,6 +283,6 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     write.csv(summary, file=paste(outputPrefix, "_summary_FDR_weight_", direction, "_", weightTmp, ".csv", sep=""),row.names=FALSE)
   }
   write.csv(thresholdList, file=paste(outputPrefix, "_threshold_list_", 
-    direction, ".csv", sep=""),row.names=FALSE)
+    direction, ".csv", sep=""))
 }
 
