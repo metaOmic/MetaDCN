@@ -38,9 +38,9 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   
   forBackIndex <- c(forwardIndex, backwardIndex)
   
-  moduleList <- lapply(summaryFDRModules[, 4], function(x) 
+  moduleList <- lapply(summaryFDRModules[, 3], function(x) 
     strsplit(x, split="/")[[1]])
-  moduleList1 <- lapply(summaryFDRModules1[, 4], function(x) 
+  moduleList1 <- lapply(summaryFDRModules1[, 3], function(x) 
     strsplit(x, split="/")[[1]])
   moduleListAll <- c(moduleList, moduleList1)  # combine forward and backward
   
