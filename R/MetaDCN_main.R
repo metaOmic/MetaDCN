@@ -53,6 +53,14 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
   
   res <- list()
 
+  data2 <- sapply(1:length(data), function(x) data[[x]][, 
+    which(labels[[x]] %in% c(caseName,controlName))])
+  data <- data2
+
+  labels2 <- sapply(1:length(data), function(x) labels[[x]][ 
+    which(labels[[x]] %in% c(caseName,controlName))])
+  labels <- labels2
+  
   caseIndex <- sapply(1:length(data), function(x) 
     which(labels[[x]] == caseName))
   controlIndex <- sapply(1:length(data), function(x) 
