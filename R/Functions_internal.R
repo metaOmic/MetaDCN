@@ -69,10 +69,6 @@ gsaFisher <- function(x, background, pathway, topNum=length(pathway),
   
   summary<-data.frame(pvalue = pval[sigIndexTop], 
     qvalue = qval[sigIndexTop], 
-    DE_in_Set = num2[sigIndexTop,1], 
-    DE_not_in_Set = num2[sigIndexTop,2], 
-    NonDE_in_Set = num2[sigIndexTop,3], 
-    NonDE_not_in_Set = num2[sigIndexTop,4], 
     matchedGene = matchedGene
   )
   a <- format(summary, digits=3)      

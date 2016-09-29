@@ -98,11 +98,11 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     countWeight1 <- countWeight1+1;
     set.seed(1234)
     print(paste("use weight1=", weightTmp))
-    summary <- matrix(0, nrow=length(componentMember)*repeatTimes, ncol=17)
-    colnames(summary) <- c("componentNumber", "repeatIndex", "geneSet", "size",
-      "moduleEnergy","diff_mean","diff_var", "group1_density", 
-      "group2_density", "pathway name", "p value", "q value", "DE in set", 
-      "DE not in set", "NonDE in set", "NonDE not in set", "matched gene")
+    summary <- matrix(0, nrow=length(componentMember)*repeatTimes, ncol=13)
+    colnames(summary) <- c("Component Number", "Repeat Index", 
+      "Gene Set", "Size", "Module Energy", "diff_mean","diff_var", 
+      "Density in Case", "Density in Control", "pathway name", 
+      "Pathway p-value", "Pathway q-value", "Matched genes")
     pathwayResult <- NULL
     count <- 0
     for (ccc in 1:length(componentMember)) {
@@ -242,8 +242,9 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
           mean(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)), 
           sd(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)), 
           paste(format(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex),
-            digits=2), collapse="//"), paste(format(getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex), digits=2), 
-          collapse="//"), paste(rownames(pathwayInfo), collapse="///"), 
+            digits=2), collapse="//"), 
+          paste(format(getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex), digits=2), collapse="//"), 
+          paste(rownames(pathwayInfo), collapse="///"), 
             paste(pathwayInfo,sep="///"))
         pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,
           topNum=length(pathwayDatabase), sort=FALSE)
@@ -271,10 +272,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     summary <- cbind(summary, summaryFDR)
     pathwayResult <- apply(pathwayResult, 2, as.numeric)
     rownames(pathwayResult) <- names(pathwayDatabase)
-    
-    ###select modules with FDR threshold
-    indexModule <- which(as.numeric(summaryFDR[,2])<0.4)
-    
+        
     #########criterions including FDR and size of the module    
     ## consider all repeats
     thresholdList[countWeight1, 1]  <-  sum(summaryFDR[, 2] < 0.1)
@@ -282,27 +280,9 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     thresholdList[countWeight1, 3]  <-  sum(summaryFDR[, 2] < 0.3)
     thresholdList[countWeight1, 4]  <-  sum(summaryFDR[, 2] < 0.4)
     
-    write.csv(summary, file=paste(outputPrefix, "_summary_FDR_weight_", direction, "_", weightTmp, ".csv", sep=""))
-    
-    if (length(indexModule) > 1) {
-      pathwayResult1 <- pathwayResult[, indexModule]
-      combinedP <- 1-pchisq(rowSums(-2*log2(pathwayResult1)), 
-        df=2*length(indexModule))
-      colnames(pathwayResult1) <- paste(indexModule, 
-        summaryFDR[indexModule, 2], sep="///")
-      pathwayResult1 <- cbind(pathwayResult1, combinedP)
-      pathwayResult1 <- pathwayResult1[order(combinedP), ]
-      write.csv(pathwayResult1, file=paste(outputPrefix, "_summary_pathway_",
-       direction, "_", weightTmp, ".csv", sep=""))
-    }
-    #if (outputFigure == TRUE) {
-      #temp <- paste(outputPrefix,"_network_plot", direction, "_weight_",weightTmp, ".zip", sep="")
-      #system(paste("zip -q", temp, paste(outputPrefix, "_figure_weight_",weightTmp, "_", direction, "*.pdf", sep="")))
-      #unlink(paste(outputPrefix, "_figure_weight_", weightTmp, "_", 
-      #direction, "_*.pdf", sep=""))
-    #}
+    write.csv(summary, file=paste(outputPrefix, "_summary_FDR_weight_", direction, "_", weightTmp, ".csv", sep=""),row.names=FALSE)
   }
   write.csv(thresholdList, file=paste(outputPrefix, "_threshold_list_", 
-    direction, ".csv", sep=""))
+    direction, ".csv", sep=""),row.names=FALSE)
 }
 

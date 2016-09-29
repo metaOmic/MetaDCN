@@ -207,13 +207,11 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
   }
 
   ModuleInCase <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", 
-    "forward", "_", res$w1, ".csv", sep=""),header=TRUE, row.names=1)
-  rownames(ModuleInCase)<-NULL
+    "forward", "_", res$w1, ".csv", sep=""),header=TRUE)
   res$ModuleInCase <- ModuleInCase[which(ModuleInCase[,"FDR"] < FDRCutoff),]
 
   ModuleInControl <- read.csv(paste(outputPrefix, "_summary_FDR_weight_", 
-    "backward", "_", res$w1, ".csv", sep=""),header=TRUE, row.names=1)
-  rownames(ModuleInControl)<-NULL
+    "backward", "_", res$w1, ".csv", sep=""),header=TRUE)
   res$ModuleInControl <- ModuleInControl[which(ModuleInControl[,"FDR"] < 
     FDRCutoff),]
 
