@@ -223,7 +223,7 @@ MetaDCN <- function(data, labels, caseName, controlName, meanFilter=0.2,
     "backward", "_", res$w1, ".csv", sep=""),header=TRUE)
   res$ModuleInControl <- ModuleInControl[which(ModuleInControl[,"FDR"] < 
     FDRCutoff),]
-  rownames(res$ModuleInCase)<-NULL
+  rownames(res$ModuleInControl)<-NULL
 
   ### use the parameters to do module assembly
   res$supermodule <- ModuleAssembly(weightList[indexMax], FDRCutoff, caseName, 
