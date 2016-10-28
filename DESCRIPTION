@@ -9,8 +9,9 @@ Depends: snow, snowfall, igraph, genefilter, R(>= 2.14.1)
 Suggests: 
 Description: Generate differential coexpression network (DCN).
 License: GPL-2
-Collate: 'MetaDCN_main.R' 'Functions_internal.R' 'Module_assembly_internal.R'
-        'Module_search_internal.R' 'Module_search_permute_internal.R' 'Network_Generation_internal.R'
+Collate: 'GeneNet.R' 'SearchBM.R' 'MetaDCN.R' 'Functions_internal.R' 
+		'Module_assembly_internal.R' 'Module_search_internal.R' 
+		'Module_search_permute_internal.R' 'Network_Generation_internal.R'
 RoxygenNote: 5.0.1
 NeedsCompilation: no
 Packaged: 2016-06-27 19:33:35 UTC; Administrator
