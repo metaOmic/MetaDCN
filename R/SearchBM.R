@@ -30,6 +30,13 @@
 SearchBM <- function(GeneNetRes, MCSteps=500, jaccardCutoff=0.8, 
   repeatTimes=10, outputFigure=TRUE, silent=FALSE){
   
+  caseName <- GeneNetRes$caseName
+  controlName <- GeneNetRes$controlName
+  permutationTimes <- GeneNetRes$permutationTimes
+  outputPrefix <- GeneNetRes$outputPrefix
+  pathwayDatabase <- GeneNetRes$pathwayDatabase
+  CPUNumbers <- GeneNetRes$CPUNumbers
+
   if(CPUNumbers > 1){
     if(CPUNumbers > permutationTimes){
       stop("CPUNumbers should be smaller than or equal to permutationTimes.")
@@ -38,14 +45,6 @@ SearchBM <- function(GeneNetRes, MCSteps=500, jaccardCutoff=0.8,
     }
   }
   
-  caseName <- GeneNetRes$caseName
-  controlName <- GeneNetRes$controlName
-  permutationTimes <- GeneNetRes$permutationTimes
-  outputPrefix <- GeneNetRes$outputPrefix
-  pathwayDatabase <- GeneNetRes$pathwayDatabase
-  CPUNumbers <- GeneNetRes$CPUNumbers
-
-
   ### generate network and search modules for permutations
   if (CPUNumbers > 1){
     paraRep <- round(permutationTimes/CPUNumbers)
