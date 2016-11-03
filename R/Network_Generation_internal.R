@@ -1,32 +1,6 @@
-## This function will generate corelation and adjacency matrices
-##
-## @title NetworkGeneration
-## @param data a list of matrix with length as 2 times the number of studies
-## each matrix is a study of case/control with rows as genes and columns as 
-## samples
-## @param caseIndex a list of vectors indicating the index for cases in each 
-## study
-## @param controlIndex a list of vectors indicating the index for cases in 
-## each study
-## @param caseStudyIndex a vector indicating the study index for cases
-## @param controlStudyIndex a vector indicating the study index for controls
-## @param meanFilter a number to specify qunatile cutoff for mean
-## @param SDFilter a number to specify qunatile cutoff for SD
-## @param edgeCutoff a number to specify qunatile cutoff for correlation to 
-## to define an edge
-## @param choose is either "real" for study, or "permute" for permutated
-## studies
-## @param permuteIndex a number to indicate which permute is working on, 
-## only necessary when parallel=TRUE
-## @param silent TRUE/FALSE to specify if suppress screen output
-## @return two RData files are saved in working directory, with each 
-## containing a data list of correlation matrices or aadjacency matrices, a 
-## vector of gene names, caseStudyIndex, and controlStudyIndex.
-## @author Li Zhu
-
 NetworkGeneration <- function(data, caseIndex, controlIndex, caseStudyIndex,
   controlStudyIndex, meanFilter, SDFilter, edgeCutoff, choose, permuteIndex, 
-  outputPrefix, silent=FALSE) {
+  folder, silent=FALSE) {
 
   options(stringsAsFactors = FALSE)
   set.seed(1234)
@@ -131,14 +105,16 @@ NetworkGeneration <- function(data, caseIndex, controlIndex, caseStudyIndex,
   }
     
   ## save matrix
+  mainDir<-getwd()
+  dir.create(file.path(mainDir, folder), showWarnings = FALSE)
   if (choose == "real") {
     save(adjAll, genes, caseStudyIndex, controlStudyIndex, 
-      file=paste(outputPrefix, "_AdjacencyMatrice.Rdata", sep=""))
+      file=paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
     save(corAll, genes, caseStudyIndex, controlStudyIndex, 
-      file=paste(outputPrefix, "_CorrelationMatrice.Rdata", sep=""))
+      file=paste(folder, "/CorrelationMatrice.Rdata", sep=""))
   }else if (choose == "permute") {
     save(adjAll, genes, caseStudyIndex, controlStudyIndex, 
-      file=paste(outputPrefix, "_AdjacencyMatricePermutation", 
+      file=paste(folder, "/AdjacencyMatricePermutation", 
         permuteIndex, ".Rdata", sep=""))
   }  
     

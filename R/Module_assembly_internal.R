@@ -11,7 +11,7 @@
 ## @return one csv file for supermodule summary, a zip file for Cytoscape
 ## @author Li Zhu
 ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName, 
-  pathwayDatabase, permutationTimes, outputPrefix){
+  pathwayDatabase, permutationTimes, folder){
   options(stringsAsFactors = FALSE)
   set.seed(1234)
 
@@ -19,10 +19,10 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   pathLength <- sapply(1:length(pathwayDatabase), function(x) 
     length(pathwayDatabase[[x]]))
   names(pathLength) <- names(pathwayDatabase)
-  summaryFDRModules <- read.csv(paste(outputPrefix, 
-    "_basic_modules_summary_forward_weight_", weightChosen, ".csv", sep=""))
-  summaryFDRModules1 <- read.csv(paste(outputPrefix, 
-    "_basic_modules_summary_backward_weight_", weightChosen, ".csv", sep=""))
+  summaryFDRModules <- read.csv(paste(folder, 
+    "/basic_modules_summary_forward_weight_", weightChosen, ".csv", sep=""))
+  summaryFDRModules1 <- read.csv(paste(folder, 
+    "/basic_modules_summary_backward_weight_", weightChosen, ".csv", sep=""))
   
   # apply FDR cutoff
   summaryFDRModules <- summaryFDRModules[which(
@@ -44,8 +44,8 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     strsplit(x, split="/")[[1]])
   moduleListAll <- c(moduleList, moduleList1)  # combine forward and backward
   
-  load(paste(outputPrefix, "_AdjacencyMatrice.Rdata", sep=""))
-  load(paste(outputPrefix, "_CorrelationMatrice.Rdata", sep=""))
+  load(paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
+  load(paste(folder, "/CorrelationMatrice.Rdata", sep=""))
   data <- adjAll
   studyNum <- length(data)/2
   studyName <- c(paste(caseName, 1:studyNum), paste(controlName, 1:studyNum))
@@ -206,7 +206,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
       moduleAssemblySummary[,6])),]
     
     write.csv(moduleAssemblySummary, 
-      file=paste(outputPrefix, "_module_assembly_summary_weight_", 
+      file=paste(folder, "/module_assembly_summary_weight_", 
         weightChosen, ".csv", sep=""))
 
     return(moduleAssemblySummary)      

@@ -17,7 +17,7 @@
 ##' used
 ##' @param CPUNumbers a number to specify how many CPUs are used for parallel,
 ##' must be less than permutationTimes
-##' @param outputPrefix a character string for output file prefix
+##' @param folder a character string folder name to store results
 ##' @param pathwayDatabase a list with each element as a vector of 
 ##' pathway genes 
 ##' @param silent TRUE/FALSE to specify if suppress screen output
@@ -37,13 +37,14 @@
 ##' data(pathwayDatabase)
 
 GeneNet <- function(data, labels, caseName, controlName, meanFilter=0.2, 
-  SDFilter=0.2, edgeCutoff=0.004, permutationTimes=10, CPUNumbers=1, outputPrefix="MetaDCN", pathwayDatabase, silent=FALSE){
+  SDFilter=0.2, edgeCutoff=0.004, permutationTimes=10, CPUNumbers=1, 
+  folder="MetaDCN", pathwayDatabase, silent=FALSE){
   
   GeneNetRes <- list()
   GeneNetRes$caseName <- caseName
   GeneNetRes$controlName <- controlName
   GeneNetRes$permutationTimes <- permutationTimes
-  GeneNetRes$outputPrefix <- outputPrefix
+  GeneNetRes$folder <- folder
   GeneNetRes$pathwayDatabase <- pathwayDatabase
   GeneNetRes$CPUNumbers <- CPUNumbers
 
@@ -74,7 +75,7 @@ GeneNet <- function(data, labels, caseName, controlName, meanFilter=0.2,
   ### generate network (permute_index is only needed for permutation parallel)
   NetworkGeneration(data, caseIndex, controlIndex, caseStudyIndex, 
     controlStudyIndex, meanFilter, SDFilter, edgeCutoff, choose="real",  
-    permuteIndex=NA, outputPrefix, silent=FALSE) 
+    permuteIndex=NA, folder, silent=FALSE) 
 
   ### generate network and search modules for permutations
   if (CPUNumbers > 1){
@@ -87,12 +88,12 @@ GeneNet <- function(data, labels, caseName, controlName, meanFilter=0.2,
       snowfall::sfExport("data", "caseIndex", "controlIndex", "caseStudyIndex",
         "controlStudyIndex", "meanFilter", "SDFilter", "edgeCutoff",
         "permutationTimes", "paraRep", "CPUNumbers2", "CPUNumbers", "nr", 
-        "outputPrefix")
+        "folder")
       snowfall::sfClusterApply(seq(1, CPUNumbers), 
         function(x) NetworkGeneration(data, caseIndex, controlIndex, 
           caseStudyIndex, controlStudyIndex, meanFilter, SDFilter, 
           edgeCutoff, choose="permute", permuteIndex=((nr-1)*CPUNumbers+x), 
-        outputPrefix, silent=FALSE)) 
+        folder, silent=FALSE)) 
       snowfall::sfStop()
     }
     if(CPUNumbers2>0){
@@ -100,12 +101,12 @@ GeneNet <- function(data, labels, caseName, controlName, meanFilter=0.2,
       snowfall::sfExport("data", "caseIndex", "controlIndex", 
         "caseStudyIndex", "controlStudyIndex", "meanFilter", "SDFilter", 
         "edgeCutoff", "permutationTimes", "paraRep", "CPUNumbers2", 
-        "CPUNumbers", "nr","outputPrefix")
+        "CPUNumbers", "nr","folder")
       snowfall::sfClusterApply(seq(1,CPUNumbers2), 
         function(x) NetworkGeneration(data, caseIndex, controlIndex, 
               caseStudyIndex, controlStudyIndex, choose="permute", meanFilter, 
               SDFilter, edgeCutoff, permuteIndex=(paraRep*CPUNumbers+x), 
-              outputPrefix, silent=FALSE)) 
+              folder, silent=FALSE)) 
       snowfall::sfStop()
     }
     
@@ -115,7 +116,7 @@ GeneNet <- function(data, labels, caseName, controlName, meanFilter=0.2,
       NetworkGeneration(data, caseIndex, controlIndex, 
                   caseStudyIndex, controlStudyIndex, meanFilter, 
                   SDFilter, edgeCutoff, choose="permute", 
-                  permuteIndex=x, outputPrefix, silent=FALSE))
+                  permuteIndex=x, folder, silent=FALSE))
   }
   return(GeneNetRes)
 }

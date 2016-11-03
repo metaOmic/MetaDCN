@@ -30,16 +30,16 @@ MetaDCN <- function(GeneNetRes, FDRCutoff, w1=NULL, silent=FALSE){
   caseName <- GeneNetRes$caseName
   controlName <- GeneNetRes$controlName
   permutationTimes <- GeneNetRes$permutationTimes
-  outputPrefix <- GeneNetRes$outputPrefix
+  folder <- GeneNetRes$folder
   pathwayDatabase <- GeneNetRes$pathwayDatabase
 
   MetaDCNRes <- list()
 
   ### selecte parameters
   forwardList <- read.csv(
-    paste(outputPrefix, "_threshold_forward.csv", sep=""))[, 2:5]
+    paste(folder, "/threshold_forward.csv", sep=""))[, 2:5]
   backwardList <- read.csv(
-    paste(outputPrefix, "_threshold_backward.csv", sep=""))[, 2:5]
+    paste(folder, "/threshold_backward.csv", sep=""))[, 2:5]
 
   if(is.null(w1)){
     indexMax <- which.max(rowSums(forwardList+backwardList))
@@ -56,10 +56,22 @@ MetaDCN <- function(GeneNetRes, FDRCutoff, w1=NULL, silent=FALSE){
 
   MetaDCNRes$w1 <- w1
 
-  weightTempIndex <- which(colnames(forwardList) == paste("FDR_", 
-    round(FDRCutoff*100), sep=""))
-  forwardNum <- forwardList[w1/100, weightTempIndex]
-  backwardNum <- backwardList[w1/100, weightTempIndex]
+  ModuleInCase <- read.csv(paste(folder, 
+    "/basic_modules_summary_forward_weight_", MetaDCNRes$w1, ".csv", sep=""), 
+    header=TRUE)
+  MetaDCNRes$ModuleInCase <- ModuleInCase[which(ModuleInCase[,"FDR"] < 
+    FDRCutoff),]
+  rownames(MetaDCNRes$ModuleInCase)<-NULL
+
+  ModuleInControl <- read.csv(paste(folder, 
+    "/basic_modules_summary_backward_weight_", MetaDCNRes$w1, ".csv", sep=""),
+     header=TRUE)
+  MetaDCNRes$ModuleInControl <- ModuleInControl[which(ModuleInControl[,"FDR"] <
+    FDRCutoff),]
+  rownames(MetaDCNRes$ModuleInControl) <- NULL
+
+  forwardNum <- nrow(MetaDCNRes$ModuleInCase)
+  backwardNum <- nrow(MetaDCNRes$ModuleInControl)
   
   if(forwardNum == 0 & backwardNum ==0 ){
     stop(paste("No basic module has FDR < ", FDRCutoff, sep=""))
@@ -70,23 +82,9 @@ MetaDCN <- function(GeneNetRes, FDRCutoff, w1=NULL, silent=FALSE){
     cat(paste(backwardNum, "modules are generated in backward direction\n"))
   }
 
-  ModuleInCase <- read.csv(paste(outputPrefix, 
-    "_basic_modules_summary_forward_weight_", MetaDCNRes$w1, ".csv", sep=""), 
-    header=TRUE)
-  MetaDCNRes$ModuleInCase <- ModuleInCase[which(ModuleInCase[,"FDR"] < 
-    FDRCutoff),]
-  rownames(MetaDCNRes$ModuleInCase)<-NULL
-
-  ModuleInControl <- read.csv(paste(outputPrefix, 
-    "_basic_modules_summary_backward_weight_", MetaDCNRes$w1, ".csv", sep=""),
-     header=TRUE)
-  MetaDCNRes$ModuleInControl <- ModuleInControl[which(ModuleInControl[,"FDR"] <
-    FDRCutoff),]
-  rownames(MetaDCNRes$ModuleInControl) <- NULL
-
   ### use the parameters to do module assembly
   MetaDCNRes$supermodule <- ModuleAssembly(MetaDCNRes$w1, FDRCutoff,
-   caseName, controlName, pathwayDatabase, permutationTimes, outputPrefix)
+   caseName, controlName, pathwayDatabase, permutationTimes, folder)
 
   return(MetaDCNRes)
 }

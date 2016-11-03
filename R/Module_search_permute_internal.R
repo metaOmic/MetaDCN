@@ -12,12 +12,12 @@
 ## @return one RData file containing a list of module energies and module names
 ## @import igraph
 ## @author Li Zhu
-ModuleSearchPermutation <- function(direction, MCSteps, permutationTimes,repeatTimes, jaccardCutoff, permuteIndex, outputPrefix){
+ModuleSearchPermutation <- function(direction, MCSteps, permutationTimes,repeatTimes, jaccardCutoff, permuteIndex, folder){
   
   options(stringsAsFactors = FALSE)
   set.seed(1234)
   
-  load(paste(outputPrefix, "_AdjacencyMatricePermutation", permuteIndex, 
+  load(paste(folder, "/AdjacencyMatricePermutation", permuteIndex, 
     ".Rdata", sep=""))
 
   data <- adjAll
@@ -202,7 +202,7 @@ ModuleSearchPermutation <- function(direction, MCSteps, permutationTimes,repeatT
   }
   
   save(permutationEnergyList, moduleNames, 
-    file=paste(outputPrefix, "_permutation_energy_",direction, "_",
+    file=paste(folder, "/permutation_energy_",direction, "_",
      permuteIndex, ".Rdata",sep=""))
 }  
   

@@ -10,7 +10,8 @@
 ## @param caseName is the character string denoting case label
 ## @param controlName is the character string denoting control 
 ## @param outputFigure TRUE/FALSE to specify if figures are generated
-## @param outputPrefix a character string for output file prefix
+## @param folder a character string for the folder name to store output file 
+## prefix
 ## @param pathwayDatabase a list with each element as a vector of 
 ## pathway genes 
 ## @return one csv file for modules, one csv file for pathways, one csv file 
@@ -18,7 +19,7 @@
 ## @import igraph
 ## @author Li Zhu
 ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
-  jaccardCutoff, caseName, controlName, outputFigure, outputPrefix, 
+  jaccardCutoff, caseName, controlName, outputFigure, folder, 
   pathwayDatabase){
   
   options(stringsAsFactors = FALSE) 
@@ -28,7 +29,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
   ###1. use the real datasets
   ##############################
   pathwayDatabase <- pathwayDatabase[sapply(pathwayDatabase,length)<250]
-  load(paste(outputPrefix, "_AdjacencyMatrice.Rdata", sep=""))
+  load(paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
   data <- adjAll
   studyNum <- length(data)/2
   studyName <- c(paste(caseName, 1:studyNum), paste(controlName, 1:studyNum))
@@ -228,7 +229,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
         ###print the final configuration
         pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,topNum=3, sort=TRUE)
         if (outputFigure == TRUE) {
-          png(file=paste(outputPrefix, "_figure_basic_component_", ccc, 
+          png(file=paste(folder, "/figure_basic_component_", ccc, 
             "_repeat_", rrr, "_weight_", weightTmp, "_", direction, ".png", 
             sep=""), 
           width = 600, 
@@ -258,7 +259,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     summary <- summary[1:count,]
     permutationEnergys <- list()
     for (mmm in 1:permutationTimes) {
-      load(paste(outputPrefix, "_permutation_energy_",direction, "_", mmm, 
+      load(paste(folder, "/permutation_energy_",direction, "_", mmm, 
         ".Rdata",sep=""))
       permutationEnergys[[mmm]] <- permutationEnergyList
     }
@@ -282,9 +283,9 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     thresholdList[countWeight1, 3]  <-  sum(summaryFDR[, 2] < 0.3)
     thresholdList[countWeight1, 4]  <-  sum(summaryFDR[, 2] < 0.4)
     
-    write.csv(summary, file=paste(outputPrefix, "_basic_modules_summary_", direction, "_weight_", weightTmp, ".csv", sep=""),row.names=FALSE)
+    write.csv(summary, file=paste(folder, "/basic_modules_summary_", direction, "_weight_", weightTmp, ".csv", sep=""),row.names=FALSE)
   }
-  write.csv(thresholdList, file=paste(outputPrefix, "_threshold_", 
+  write.csv(thresholdList, file=paste(folder, "/threshold_", 
     direction, ".csv", sep=""))
 }
 
