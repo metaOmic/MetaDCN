@@ -105,8 +105,7 @@ NetworkGeneration <- function(data, caseIndex, controlIndex, caseStudyIndex,
   }
     
   ## save matrix
-  mainDir<-getwd()
-  dir.create(file.path(mainDir, folder), showWarnings = FALSE)
+  dir.create(file.path(folder), showWarnings = FALSE)
   if (choose == "real") {
     save(adjAll, genes, caseStudyIndex, controlStudyIndex, 
       file=paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
