@@ -198,7 +198,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     }    
     moduleAssemblySummary <- moduleAssemblySummary[1:count, ]
     
-    moduleAssemblySummary[,6] <- p.adjust(as.numeric(moduleAssemblySummary[,2])
+    moduleAssemblySummary[,6] <- p.adjust(as.numeric(moduleAssemblySummary[,3])
       ,method="BH")
     moduleAssemblySummary <- moduleAssemblySummary[order(as.numeric(
       moduleAssemblySummary[,6])),]
