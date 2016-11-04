@@ -197,7 +197,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     }    
     moduleAssemblySummary <- moduleAssemblySummary[1:count, ]
     
-    folder2 <- gsub(" ", "\\\ ", folder2, fixed=TRUE)
+    folder2 <- gsub(" ", "\\\ ", folder, fixed=TRUE)
     system(paste("zip -q ",folder2, "/module_assembly_edge_node_list.zip ",
      folder2, "/GO*.txt ", folder2, "/KEGG*.txt ", folder2, "/REACTOME*.txt ", 
      folder2, "/BIOCARTA*.txt", sep=""))  
