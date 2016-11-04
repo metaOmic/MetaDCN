@@ -171,12 +171,12 @@ energyEvaluation <- function(data, memberNew, group1Index, group2Index,
 ## add or removing nodes
 addNode <- function(x, trialSet) {
   if (length(trialSet) == 0) {
-    trialSet <- NA
+    trialSet <- numeric()
   }
-  if(length(trialSet) == 0 | all(is.na(trialSet)) == 1) {
+  if(length(trialSet) == 0) {
     temp <- NULL
     temp$x <- x
-    temp$trialSet <- NA
+    temp$trialSet <- numeric()
     return(temp)
   }
   if (length(trialSet) > 1) {
