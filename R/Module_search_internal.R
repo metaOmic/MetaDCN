@@ -229,7 +229,8 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
         ###print the final configuration
         pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,topNum=3, sort=TRUE)
         if (outputFigure == TRUE) {
-          png(file=paste(folder, "/figure_basic_component_", ccc, 
+          png(file=paste(folder, "/Basic_modules_figures_weight_", weightTmp, 
+            "/Basic_module_component_", ccc, 
             "_repeat_", rrr, "_weight_", weightTmp, "_", direction, ".png", 
             sep=""), 
           width = 600, 

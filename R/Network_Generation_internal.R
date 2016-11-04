@@ -107,7 +107,22 @@ NetworkGeneration <- function(data, caseIndex, controlIndex, caseStudyIndex,
   ## save matrix
   dir.create(file.path(folder), showWarnings = FALSE)
   dir.create(file.path(paste(folder,"/CytoscapeFiles",sep="")), 
-    showWarnings = FALSE)                
+    showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_100",
+    sep="")), showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_200",
+    sep="")), showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_300",
+    sep="")), showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_400",
+    sep="")), showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_500",
+    sep="")), showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_600",
+    sep="")), showWarnings = FALSE)
+  dir.create(file.path(paste(folder,"/Basic_modules_figures_weight_700",
+    sep="")), showWarnings = FALSE)
+
   if (choose == "real") {
     save(adjAll, genes, caseStudyIndex, controlStudyIndex, 
       file=paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
