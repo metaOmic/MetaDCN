@@ -197,11 +197,12 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     }    
     moduleAssemblySummary <- moduleAssemblySummary[1:count, ]
     
-    system(paste("zip -q ",folder, "/module_assembly_edge_node_list.zip ",
-     folder, "/GO*.txt ", folder, "/KEGG*.txt ", folder, "/REACTOME*.txt ", 
-     folder, "/BIOCARTA*.txt", sep=""))  
-    system(paste("rm ", folder, "/GO*.txt ", folder, "/KEGG*.txt ", folder, 
-      "/REACTOME*.txt ", folder, "/BIOCARTA*.txt", sep=""))
+    folder2 <- gsub(" ", "\\\ ", folder2, fixed=TRUE)
+    system(paste("zip -q ",folder2, "/module_assembly_edge_node_list.zip ",
+     folder2, "/GO*.txt ", folder2, "/KEGG*.txt ", folder2, "/REACTOME*.txt ", 
+     folder2, "/BIOCARTA*.txt", sep=""))  
+    system(paste("rm ", folder2, "/GO*.txt ", folder2, "/KEGG*.txt ", folder2, 
+      "/REACTOME*.txt ", folder2, "/BIOCARTA*.txt", sep=""))
     
     moduleAssemblySummary[,6] <- p.adjust(as.numeric(moduleAssemblySummary[,2])
       ,method="BH")
