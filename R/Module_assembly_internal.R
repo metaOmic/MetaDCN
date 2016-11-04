@@ -163,11 +163,12 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
         edgeList <- cbind(genes[as.numeric(edgeNameColumn1[,1])], genes[as.numeric(edgeNameColumn1[,2])], weightValue1, pvalueList)
         colnames(edgeList) <- c("GeneA", "GeneB", "Zscore", "Pvalue")
 
-        write.table(edgeList, file=paste(folder, "/", pathwayName, 
+        write.table(edgeList, file=paste(folder, "/CytoscapeFiles/", pathwayName, 
           "_edge_list.txt", 
           sep=""), row.names=FALSE, 
         quote=FALSE, sep="\t")
-        write.table(nodeList, file=paste(folder, "/", pathwayName, 
+        
+        write.table(nodeList, file=paste(folder, "/CytoscapeFiles/", pathwayName, 
           "_node_list.txt", sep=""), row.names=FALSE, 
         quote=FALSE, sep="\t")      
         if (length(indexComb) >= 1) {
@@ -196,13 +197,6 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
       }
     }    
     moduleAssemblySummary <- moduleAssemblySummary[1:count, ]
-    
-    folder2 <- gsub(" ", "\\\ ", folder, fixed=TRUE)
-    system(paste("zip -q ",folder2, "/module_assembly_edge_node_list.zip ",
-     folder2, "/GO*.txt ", folder2, "/KEGG*.txt ", folder2, "/REACTOME*.txt ", 
-     folder2, "/BIOCARTA*.txt", sep=""))  
-    system(paste("rm ", folder2, "/GO*.txt ", folder2, "/KEGG*.txt ", folder2, 
-      "/REACTOME*.txt ", folder2, "/BIOCARTA*.txt", sep=""))
     
     moduleAssemblySummary[,6] <- p.adjust(as.numeric(moduleAssemblySummary[,2])
       ,method="BH")
