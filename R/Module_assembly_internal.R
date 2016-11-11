@@ -184,8 +184,8 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
             collapse="//")
           moduleAssemblySummary[count, 10] <- paste(format(density2, digits=2),
             collapse="//")
-          moduleAssemblySummary[count, 11] <- meanDiff
-          moduleAssemblySummary[count, 12] <- sdDiff
+          moduleAssemblySummary[count, 11] <- format(meanDiff, digits=2)
+          moduleAssemblySummary[count, 12] <- format(sdDiff, digits=2)
           indexPath <- which(names(pathwayDatabase) == pathwayName)
           intersectGene <- intersect(toupper(pathwayDatabase[[indexPath]]),
             toupper(groupGenesUnique))
@@ -202,6 +202,8 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
       ,method="BH")
     moduleAssemblySummary <- moduleAssemblySummary[order(as.numeric(
       moduleAssemblySummary[,6])),]
+
+    moduleAssemblySummary[,6] <- format(moduleAssemblySummary[,6], digits=3)
     
     write.csv(moduleAssemblySummary, 
       file=paste(folder, "/module_assembly_summary_weight_", 

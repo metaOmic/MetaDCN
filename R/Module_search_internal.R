@@ -104,7 +104,6 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
       "Gene Set", "Size", "Module Energy", "diff_mean","diff_var", 
       "Density in Case", "Density in Control", "pathway name", 
       "Pathway p-value", "Pathway q-value", "Matched genes")
-    pathwayResult <- NULL
     count <- 0
     for (ccc in 1:length(componentMember)) {
       if (length(componentMember[[ccc]]) <= 3) {
@@ -241,17 +240,19 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
         }
         
         summary[count+rrr,] <- c(ccc, rrr, paste(geneNameRepeat[[rrr]], 
-          collapse="/"), length(geneNameRepeat[[rrr]]), oldEnergyRepeat[[rrr]],
-          mean(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)), 
-          sd(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)), 
+          collapse="/"), length(geneNameRepeat[[rrr]]), 
+          format(oldEnergyRepeat[[rrr]],digits=2),
+          format(mean(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)),
+            digits=2), 
+          format(sd(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)),
+            digits=2), 
           paste(format(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex),
             digits=2), collapse="//"), 
           paste(format(getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex), digits=2), collapse="//"), 
-          paste(rownames(pathwayInfo), collapse="///"), 
-            paste(pathwayInfo,sep="///"))
-        pathwayInfo <- gsaFisher(geneNameRepeat[[rrr]], genes, pathwayDatabase,
-          topNum=length(pathwayDatabase), sort=FALSE)
-        pathwayResult <- cbind(pathwayResult, pathwayInfo[,1])
+          paste(rownames(pathwayInfo), collapse="//"), 
+            paste(pathwayInfo$pvalue,collapse="//"),
+            paste(pathwayInfo$qvalue,collapse="//"),
+            paste(pathwayInfo$matchedGene,collapse="///"))
       }
       count <- count+length(geneNameRepeat)
     }
@@ -273,9 +274,9 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
       summaryFDR[FDRIndex, 1] <- (sum(temp1)+1)/(sum(temp2)+1)
     }
     summaryFDR[,2] <- p.adjust(summaryFDR[,1], method="BH")
+    summaryFDR <- format(summaryFDR, digits=3)
     summary <- cbind(summary, summaryFDR)
-    pathwayResult <- apply(pathwayResult, 2, as.numeric)
-    rownames(pathwayResult) <- names(pathwayDatabase)
+  
         
     #########criterions including FDR and size of the module    
     ## consider all repeats
