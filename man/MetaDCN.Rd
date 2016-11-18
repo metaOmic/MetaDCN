@@ -4,38 +4,40 @@
 \alias{MetaDCN}
 \title{MetaDCN}
 \usage{
-MetaDCN(GeneNetRes, FDRCutoff, w1 = NULL, silent = FALSE)
+MetaDCN(GeneNetRes, SearchBMRes, FDRCutoff, w1 = NULL, silent = FALSE)
 }
 \arguments{
 \item{GeneNetRes}{A list from GeneNet function}
 
+\item{SearchBMRes}{A list from SearchBM function}
+
 \item{FDRCutoff}{A number to specify FDR cutoff for basic modules}
 
 \item{w1}{A number chosen from (100, 200, ..., 700) to specify the weight1 
-used in objective function (optional). If not specified, the w1 with the 
-most modules will be chosen (recommended).}
+used in objective function (optional). If not specified, w1 from SearchBM 
+function will be used (recommended).}
 
 \item{silent}{TRUE/FALSE to specify if suppress screen output}
 }
 \value{
-a list and one zip file for Cytoscape
+MetaDNC will return a list and files for Cytoscape.
+
+list containing:
 \item{w1}{w1 used}  
-\item{ModuleInCase }{Summary of basic modules in case}
-\item{ModuleInConrtol }{Summary of basic modules in control}
+\item{BMInCase }{Summary of basic modules in case controling FDR}
+\item{BMInConrtol }{Summary of basic modules in control controling FDR}
 \item{Supermodule }{Summary of supermodules}
-\item{module_assembly_edge_node_list.zip}{Files for Cytoscape}
+
+CytoscapeFiles is a folder containing files for Cytoscape.
 }
 \description{
 Assemble basic modules into supermodules
 }
 \details{
-This function will assemble basic modules found from SearchBM into 
-supermodules
-}
-\examples{
-data(pathwayDatabase)
+This function will assemble basic modules detected from SearchBM into 
+supermodules.
 }
 \author{
-Li Zhu
+Li Zhu (liz86@pitt.edu)
 }
 
