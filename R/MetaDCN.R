@@ -1,31 +1,31 @@
 ##' Assemble basic modules into supermodules
 ##'
-##' This function will assemble basic modules found from SearchBM into 
-##' supermodules
+##' This function will assemble basic modules detected from SearchBM into 
+##' supermodules.
 ##' 
 ##' @title MetaDCN
 ##' @param GeneNetRes A list from GeneNet function 
+##' @param SearchBMRes A list from SearchBM function 
 ##' @param FDRCutoff A number to specify FDR cutoff for basic modules
 ##' @param w1 A number chosen from (100, 200, ..., 700) to specify the weight1 
-##' used in objective function (optional). If not specified, the w1 with the 
-##' most modules will be chosen (recommended).
+##' used in objective function (optional). If not specified, w1 from SearchBM 
+##' function will be used (recommended).
 ##' @param silent TRUE/FALSE to specify if suppress screen output
-##' @return a list and one zip file for Cytoscape
+##' @return MetaDNC will return a list and files for Cytoscape.
+##' @return list containing:
 ##' \item{w1}{w1 used}  
-##' \item{ModuleInCase }{Summary of basic modules in case}
-##' \item{ModuleInConrtol }{Summary of basic modules in control}
+##' \item{BMInCase }{Summary of basic modules in case controling FDR}
+##' \item{BMInConrtol }{Summary of basic modules in control controling FDR}
 ##' \item{Supermodule }{Summary of supermodules}
-##' \item{module_assembly_edge_node_list.zip}{Files for Cytoscape}
-##' @author Li Zhu
+##' @return CytoscapeFiles is a folder containing files for Cytoscape.
+##' @author Li Zhu (liz86@pitt.edu)
 ##' @import snow
 ##' @import snowfall
 ##' @import igraph
 ##' @import genefilter
 ##' @export
-##' @examples 
-##' data(pathwayDatabase)
 
-MetaDCN <- function(GeneNetRes, FDRCutoff, w1=NULL, silent=FALSE){
+MetaDCN <- function(GeneNetRes, SearchBMRes, FDRCutoff, w1=NULL, silent=FALSE){
   
   caseName <- GeneNetRes$caseName
   controlName <- GeneNetRes$controlName
@@ -35,43 +35,27 @@ MetaDCN <- function(GeneNetRes, FDRCutoff, w1=NULL, silent=FALSE){
 
   MetaDCNRes <- list()
 
-  ### selecte parameters
-  forwardList <- read.csv(
-    paste(folder, "/threshold_forward.csv", sep=""))[, 2:5]
-  backwardList <- read.csv(
-    paste(folder, "/threshold_backward.csv", sep=""))[, 2:5]
-
   if(is.null(w1)){
-    indexMax <- which.max(rowSums(forwardList+backwardList))
-    weightList <- seq(from=100, to=700, by=100)
-    w1 <- weightList[indexMax]
-    if(silent == FALSE){
-      cat(paste("w1 parameter chosen is:", w1, "\n"))
-    }
-  }else{
-    if(!(w1 %in% seq(100,700,by=100))){
-      stop("Please choose w1 from (100, 200, ..., 700)")
-    }
+    w1 <- SearchBMRes$w1
   }
-
   MetaDCNRes$w1 <- w1
 
-  ModuleInCase <- read.csv(paste(folder, 
+  BMInCase <- read.csv(paste(folder, 
     "/basic_modules_summary_forward_weight_", MetaDCNRes$w1, ".csv", sep=""), 
     header=TRUE)
-  MetaDCNRes$ModuleInCase <- ModuleInCase[which(ModuleInCase[,"FDR"] < 
+  MetaDCNRes$BMInCase <- BMInCase[which(BMInCase[,"FDR"] < 
     FDRCutoff),]
-  rownames(MetaDCNRes$ModuleInCase)<-NULL
+  rownames(MetaDCNRes$BMInCase)<-NULL
 
-  ModuleInControl <- read.csv(paste(folder, 
+  BMInControl <- read.csv(paste(folder, 
     "/basic_modules_summary_backward_weight_", MetaDCNRes$w1, ".csv", sep=""),
      header=TRUE)
-  MetaDCNRes$ModuleInControl <- ModuleInControl[which(ModuleInControl[,"FDR"] <
+  MetaDCNRes$BMInControl <- BMInControl[which(BMInControl[,"FDR"] <
     FDRCutoff),]
-  rownames(MetaDCNRes$ModuleInControl) <- NULL
+  rownames(MetaDCNRes$BMInControl) <- NULL
 
-  forwardNum <- nrow(MetaDCNRes$ModuleInCase)
-  backwardNum <- nrow(MetaDCNRes$ModuleInControl)
+  forwardNum <- nrow(MetaDCNRes$BMInCase)
+  backwardNum <- nrow(MetaDCNRes$BMInControl)
   
   if(forwardNum == 0 & backwardNum ==0 ){
     stop(paste("No basic module has FDR < ", FDRCutoff, sep=""))

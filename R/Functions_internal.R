@@ -72,8 +72,8 @@ gsaFisher <- function(x, background, pathway, topNum=length(pathway),
     matchedGene = matchedGene
   )
   
-  a <- format(summary, digits=3)      
-  return(a)
+  #a <- format(summary, digits=3)      
+  return(summary)
 }
 
 ######################

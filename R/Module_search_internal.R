@@ -250,8 +250,8 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
             digits=2), collapse="//"), 
           paste(format(getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex), digits=2), collapse="//"), 
           paste(rownames(pathwayInfo), collapse="//"), 
-            paste(pathwayInfo$pvalue,collapse="//"),
-            paste(pathwayInfo$qvalue,collapse="//"),
+            paste(signif(pathwayInfo$pvalue, digits=3) ,collapse="//"),
+            paste(signif(pathwayInfo$qvalue, digits=3), collapse="//"),
             paste(pathwayInfo$matchedGene,collapse="///"))
       }
       count <- count+length(geneNameRepeat)
@@ -274,9 +274,12 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
       summaryFDR[FDRIndex, 1] <- (sum(temp1)+1)/(sum(temp2)+1)
     }
     summaryFDR[,2] <- p.adjust(summaryFDR[,1], method="BH")
-    summaryFDR <- format(summaryFDR, digits=3)
+    summaryFDR <- signif(summaryFDR, digits=3)
     summary <- cbind(summary, summaryFDR)
-  
+    
+    ## switch column orders
+    summary2 <- cbind(summary[,1:4], summary[,c("p_value","FDR")], 
+      summary[,5:13])
         
     #########criterions including FDR and size of the module    
     ## consider all repeats
@@ -285,7 +288,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     thresholdList[countWeight1, 3]  <-  sum(summaryFDR[, 2] < 0.3)
     thresholdList[countWeight1, 4]  <-  sum(summaryFDR[, 2] < 0.4)
     
-    write.csv(summary, file=paste(folder, "/basic_modules_summary_", direction, "_weight_", weightTmp, ".csv", sep=""),row.names=FALSE)
+    write.csv(summary2, file=paste(folder, "/basic_modules_summary_", direction, "_weight_", weightTmp, ".csv", sep=""),row.names=FALSE)
   }
   write.csv(thresholdList, file=paste(folder, "/threshold_", 
     direction, ".csv", sep=""))

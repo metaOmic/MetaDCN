@@ -52,7 +52,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   
   background <- unique(unlist(pathwayDatabase))
   summaryPathwayEnrichment <- sapply(moduleListAll, function(x) 
-    as.numeric(gsaFisher(x, background, pathway=pathwayDatabase, sort=FALSE)[,1])) # pathway*modules matrix with p-values
+    gsaFisher(x, background, pathway=pathwayDatabase, sort=FALSE)[,1]) # pathway*modules matrix with p-values
   summaryPathwayEnrichment <- apply(summaryPathwayEnrichment, 2, as.numeric)
   rownames(summaryPathwayEnrichment) <- names(pathwayDatabase)
   
@@ -61,10 +61,10 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   
   pathwayThreshold <- 0.05
   topModuleAssembly <- 150
-  moduleAssemblySummary <- matrix(0, nrow=topModuleAssembly, ncol=13)
+  moduleAssemblySummary <- matrix(0, nrow=topModuleAssembly, ncol=14)
   colnames(moduleAssemblySummary) <- c("pathway_name", "pathway_size",
-    "p_value", "size", "gene_in_set", "q_value", "module_num", 
-    "module_index","density1","density2", "mean_diff", "sd_diff", "gene_in_path")
+    "p_value", "q_value", "size", "num_gene_in_set", "module_num", 
+    "module_index","density1","density2", "mean_diff", "sd_diff", "genes_in_path", "genes_in_module")
   count <- 0
   for (i in 1:topModuleAssembly) {
     pathwayName <- rownames(summaryPathwayEnrichmentSort)[i]
@@ -176,20 +176,22 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
           moduleAssemblySummary[count, 1] <- pathwayName
           moduleAssemblySummary[count, 2] <- pathLength[pathwayName]
           moduleAssemblySummary[count, 3] <- enrichPvalue
-          moduleAssemblySummary[count, 4] <- length(groupGenesUnique)
-          moduleAssemblySummary[count, 5] <- length(matchPathwayGenes)
+          moduleAssemblySummary[count, 5] <- length(groupGenesUnique)
+          moduleAssemblySummary[count, 6] <- length(matchPathwayGenes)
           moduleAssemblySummary[count, 7] <- length(indexComb)
           moduleAssemblySummary[count, 8] <- paste(forBackIndex[indexModuleEnrichPathway[indexComb]],collapse=",", sep="")
-          moduleAssemblySummary[count, 9] <- paste(format(density1, digits=2),
+          moduleAssemblySummary[count, 9] <- paste(signif(density1, digits=2),
             collapse="//")
-          moduleAssemblySummary[count, 10] <- paste(format(density2, digits=2),
+          moduleAssemblySummary[count, 10] <- paste(signif(density2, digits=2),
             collapse="//")
-          moduleAssemblySummary[count, 11] <- format(meanDiff, digits=2)
-          moduleAssemblySummary[count, 12] <- format(sdDiff, digits=2)
+          moduleAssemblySummary[count, 11] <- signif(meanDiff, digits=2)
+          moduleAssemblySummary[count, 12] <- signif(sdDiff, digits=2)
           indexPath <- which(names(pathwayDatabase) == pathwayName)
           intersectGene <- intersect(toupper(pathwayDatabase[[indexPath]]),
             toupper(groupGenesUnique))
           moduleAssemblySummary[count, 13] <- paste(intersectGene, 
+            collapse=",")
+          moduleAssemblySummary[count, 14] <- paste(groupGenesUnique, 
             collapse=",")
         }
       }else{
@@ -198,12 +200,14 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     }    
     moduleAssemblySummary <- moduleAssemblySummary[1:count, ]
     
-    moduleAssemblySummary[,6] <- p.adjust(as.numeric(moduleAssemblySummary[,3])
+    moduleAssemblySummary[,4] <- p.adjust(as.numeric(moduleAssemblySummary[,3])
       ,method="BH")
-    moduleAssemblySummary <- moduleAssemblySummary[order(as.numeric(
-      moduleAssemblySummary[,6])),]
 
-    moduleAssemblySummary[,6] <- format(moduleAssemblySummary[,6], digits=3)
+    moduleAssemblySummary <- moduleAssemblySummary[order(
+      moduleAssemblySummary[,4]),]
+
+    moduleAssemblySummary[,3] <- signif(as.numeric(moduleAssemblySummary[,3]), digits=3)
+    moduleAssemblySummary[,4] <- signif(as.numeric(moduleAssemblySummary[,4]), digits=3)
     
     write.csv(moduleAssemblySummary, 
       file=paste(folder, "/module_assembly_summary_weight_", 

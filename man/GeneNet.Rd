@@ -6,58 +6,79 @@
 \usage{
 GeneNet(data, labels, caseName, controlName, meanFilter = 0.2,
   SDFilter = 0.2, edgeCutoff = 0.004, permutationTimes = 10,
-  CPUNumbers = 1, outputPrefix = "MetaDCN", pathwayDatabase,
-  silent = FALSE)
+  CPUNumbers = 1, folder = "MetaDCN", pathwayDatabase, silent = FALSE)
 }
 \arguments{
-\item{data}{a list of matrice (studies) with row names as genes and column 
-names as samples.}
+\item{data}{a list of matrice (studies) with rows as features and columns 
+as samples.}
 
 \item{labels}{a list of vectors to specify the case/control labels for 
-each subject corresponidng to the columns in each data matrix}
+each subject corresponidng to the columns in each data matrix.}
 
-\item{caseName}{a character string denoting case label}
+\item{caseName}{a character string denoting case label.}
 
-\item{controlName}{a character string denoting control label}
+\item{controlName}{a character string denoting control label.}
 
-\item{meanFilter}{a number to specify qunatile cutoff for mean}
+\item{meanFilter}{a number between 0 and 1. Features with mean below this
+cutoff will be filtered out.}
 
-\item{SDFilter}{a number to specify qunatile cutoff for SD}
+\item{SDFilter}{a number between 0 and 1. Features with standard deviation
+(SD) will be filtered out.}
 
-\item{edgeCutoff}{a number to specify qunatile cutoff for correlation to 
-to define an edge}
+\item{edgeCutoff}{a number between 0 and 1, denoting the proportion of 
+edges to kept.}
 
 \item{permutationTimes}{a number to specify how many permutations to be 
-used}
+used. Large number of permutations will be very time-consuming.}
 
 \item{CPUNumbers}{a number to specify how many CPUs are used for parallel,
-must be less than permutationTimes}
+if multicores exists. Must be less than or equal to the permutationTimes.}
 
-\item{outputPrefix}{a character string for output file prefix}
+\item{folder}{folder path to store results.}
 
 \item{pathwayDatabase}{a list with each element as a vector of 
-pathway genes}
+pathway genes, and names as pathway names.}
 
-\item{silent}{TRUE/FALSE to specify if suppress screen output}
+\item{silent}{TRUE/FALSE to specify if suppress screen output.}
 }
 \value{
-a list and several RData files saved in the current working directory
-\item{GeneNet }{A list containing important parameters to pass to SearchBM and MetaDCN functions}
-\item{AdjacencyMatrice.RData }{A list of adjacency matrice for case and control in each study in the order of case studies and control studies}
-\item{CorrelationMatrice.RData }{A list of correlation matrice for case and control each study in the order of case studies and control studies}
-\item{CorrelationMatrice.RData }{A list of correlation matrice for case and control each study in the order of case studies and control studies}
-\item{AdjacencyMatricePermutationP.RData }{A list of correlation matrice for case and control in each study in the order of case studies and control studies for permutation P}
+GeneNet returns a list of information which will be used for 
+SearchBM and MetaDCN function, and several RData files stored in folder 
+path.
+
+List of basic informations for SearchBM and MetaDCN input:
+\item{caseName }{case names from arguments}
+\item{controlName }{control names from arguments}
+\item{permutationTimes }{permutation times from arguments}
+\item{folder }{folder path from arguments}
+\item{pathwayDatabase }{a list of pathways from arguments}
+\item{CPUNumbers }{CPU numbers from arguments}
+
+AdjacencyMatrice.RData is a list of adjacency matrice for case and 
+control in each study in the order of case studies and control studies.
+
+CorrelationMatrice.RData is a list of correlation matrice for case 
+and control in each study in the order of case studies and control studies.
+
+AdjacencyMatricePermutationP.RData is a list of correlation 
+matrice for case and control in each study in the order of case studies 
+and control studies for permutation P.
 }
 \description{
 Generate correction and adjacency matrice for data and permutation
 }
 \details{
-This function will generate correction and adjacency matrix for data and application
+This function will generate correction and adjacency matrix for data and 
+permutations.
 }
 \examples{
 data(pathwayDatabase)
+data(example)
+GeneNetRes <- GeneNet(data_2l, labels_2l, caseName="inv(16)", controlName="t(8;21)", meanFilter=0.8, SDFilter=0.8, edgeCutoff=0.1, permutationTimes=4, CPUNumbers=1, folder="MetaDCN", pathwayDatabase, silent=FALSE)
+SearchBMRes <- SearchBM(GeneNetRes, MCSteps=500, jaccardCutoff=0.8, repeatTimes=3, outputFigure=TRUE, silent=FALSE)
+MetaDNCRes <- MetaDCN(GeneNetRes, SearchBMRes, FDRCutoff=0.3, w1=NULL, silent=FALSE)
 }
 \author{
-Li Zhu
+Li Zhu (liz86@pitt.edu)
 }
 
