@@ -14,6 +14,8 @@
 ##' @return MetaDNC will return a list and files for Cytoscape.
 ##' @return list containing:
 ##' \item{w1}{w1 used}  
+##' \item{BMInCaseSig }{Summary of basic modules higher correlated in Case controling FDR}
+##' \item{BMInControlSig }{Summary of basic modules higher correlated in Control controling FDR}
 ##' \item{Supermodule }{Summary of supermodules}
 ##' @return CytoscapeFiles is a folder containing files for Cytoscape.
 ##' @author Li Zhu (liz86@pitt.edu)
@@ -39,17 +41,17 @@ MetaDCN <- function(GeneNetRes, SearchBMRes, FDRCutoff, w1=NULL, silent=FALSE){
   MetaDCNRes$w1 <- w1
 
   BMInCase <- SearchBMRes$BMInCase
-  BMInCaseSig <- BMInCase[which(BMInCase[,"FDR"] < 
+  MetaDCNRes$BMInCaseSig <- BMInCase[which(BMInCase[,"FDR"] < 
     FDRCutoff),]
-  rownames(BMInCaseSig)<-NULL
+  rownames(MetaDCNRes$BMInCaseSig)<-NULL
 
   BMInControl <- SearchBMRes$BMInControl
-  BMInControlSig <- BMInControl[which(BMInControl[,"FDR"] <
+  MetaDCNRes$BMInControlSig <- BMInControl[which(BMInControl[,"FDR"] <
     FDRCutoff),]
-  rownames(BMInControlSig) <- NULL
+  rownames(MetaDCNRes$BMInControlSig) <- NULL
 
-  forwardNum <- nrow(BMInCaseSig)
-  backwardNum <- nrow(BMInControlSig)
+  forwardNum <- nrow(MetaDCNRes$BMInCaseSig)
+  backwardNum <- nrow(MetaDCNRes$BMInControlSig)
   
   if(forwardNum == 0 & backwardNum ==0 ){
     stop(paste("No basic module has FDR < ", FDRCutoff, sep=""))
