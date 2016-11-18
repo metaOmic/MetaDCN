@@ -19,28 +19,35 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
   pathLength <- sapply(1:length(pathwayDatabase), function(x) 
     length(pathwayDatabase[[x]]))
   names(pathLength) <- names(pathwayDatabase)
-  summaryFDRModules <- read.csv(paste(folder, 
+
+  BMInCase <- read.csv(paste(folder, 
     "/basic_modules_summary_forward_weight_", weightChosen, ".csv", sep=""))
-  summaryFDRModules1 <- read.csv(paste(folder, 
-    "/basic_modules_summary_backward_weight_", weightChosen, ".csv", sep=""))
-  
-  # apply FDR cutoff
-  summaryFDRModules <- summaryFDRModules[which(
-    summaryFDRModules[,"FDR"] <= FDRCutoff), ]
-  summaryFDRModules1 <- summaryFDRModules1[
-  which(summaryFDRModules1[, "FDR"] <= FDRCutoff),]
-  forwardIndex <- seq(1:nrow(summaryFDRModules))
+  forwardIndex <- seq(1:nrow(BMInCase))
   forwardIndex <- sapply(1:length(forwardIndex), 
     function(x) paste("H",forwardIndex[x], sep=""))
-  backwardIndex <- seq(1:nrow(summaryFDRModules1))
+
+  BMInControl <- read.csv(paste(folder, 
+    "/basic_modules_summary_backward_weight_", weightChosen, ".csv", sep=""))
+  backwardIndex <- seq(1: nrow(BMInControl))
   backwardIndex <- sapply(1:length(backwardIndex), 
     function(x) paste("L", backwardIndex[x], sep=""))
+
+  # apply FDR cutoff
+  BMInCaseSelect <- BMInCase[which(
+    BMInCase[,"FDR"] <= FDRCutoff), ]
+  forwardIndexSelect <- forwardIndex[which(BMInCase[,"FDR"] 
+    <= FDRCutoff)]
+
+  BMInControlSelect <- BMInControl[
+    which(BMInControl[, "FDR"] <= FDRCutoff),]
+  backwardIndexSelect <- backwardIndex[which(BMInControl[,"FDR"] 
+    <= FDRCutoff)]
   
-  forBackIndex <- c(forwardIndex, backwardIndex)
+  selectIndex <- c(forwardIndexSelect, backwardIndexSelect)
   
-  moduleList <- lapply(summaryFDRModules[, 3], function(x) 
+  moduleList <- lapply(BMInCaseSelect[, 4], function(x) 
     strsplit(x, split="/")[[1]])
-  moduleList1 <- lapply(summaryFDRModules1[, 3], function(x) 
+  moduleList1 <- lapply(BMInControlSelect[, 4], function(x) 
     strsplit(x, split="/")[[1]])
   moduleListAll <- c(moduleList, moduleList1)  # combine forward and backward
   
@@ -179,7 +186,7 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
           moduleAssemblySummary[count, 5] <- length(groupGenesUnique)
           moduleAssemblySummary[count, 6] <- length(matchPathwayGenes)
           moduleAssemblySummary[count, 7] <- length(indexComb)
-          moduleAssemblySummary[count, 8] <- paste(forBackIndex[indexModuleEnrichPathway[indexComb]],collapse=",", sep="")
+          moduleAssemblySummary[count, 8] <- paste(selectIndex[indexModuleEnrichPathway[indexComb]],collapse=",", sep="")
           moduleAssemblySummary[count, 9] <- paste(signif(density1, digits=2),
             collapse="//")
           moduleAssemblySummary[count, 10] <- paste(signif(density2, digits=2),

@@ -24,8 +24,6 @@ MetaDNC will return a list and files for Cytoscape.
 
 list containing:
 \item{w1}{w1 used}  
-\item{BMInCase }{Summary of basic modules in case controling FDR}
-\item{BMInConrtol }{Summary of basic modules in control controling FDR}
 \item{Supermodule }{Summary of supermodules}
 
 CytoscapeFiles is a folder containing files for Cytoscape.

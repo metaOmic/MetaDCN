@@ -99,8 +99,8 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     countWeight1 <- countWeight1+1;
     set.seed(1234)
     print(paste("use weight1=", weightTmp))
-    summary <- matrix(0, nrow=length(componentMember)*repeatTimes, ncol=13)
-    colnames(summary) <- c("Component Number", "Repeat Index", 
+    summary <- matrix(0, nrow=length(componentMember)*repeatTimes, ncol=14)
+    colnames(summary) <- c("Module Index", "Component Number", "Repeat Index", 
       "Gene Set", "Size", "Module Energy", "diff_mean","diff_var", 
       "Density in Case", "Density in Control", "pathway name", 
       "Pathway p-value", "Pathway q-value", "Matched genes")
@@ -239,7 +239,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
           dev.off()
         }
         
-        summary[count+rrr,] <- c(ccc, rrr, paste(geneNameRepeat[[rrr]], 
+        summary[count+rrr, -1] <- c(ccc, rrr, paste(geneNameRepeat[[rrr]], 
           collapse="/"), length(geneNameRepeat[[rrr]]), 
           format(oldEnergyRepeat[[rrr]],digits=2),
           format(mean(getDensity(data, geneNameRepeat[[rrr]], caseStudyIndex) - getDensity(data, geneNameRepeat[[rrr]], controlStudyIndex)),
@@ -268,7 +268,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     summaryFDR <- matrix(0, dim(summary)[1], 2)
     colnames(summaryFDR) <- c("p_value", "FDR")
     for(FDRIndex in 1:dim(summary)[1]){ 
-      energyTrue <- as.numeric(summary[FDRIndex,5])
+      energyTrue <- as.numeric(summary[FDRIndex, 6])
       temp1 <- sapply(1:permutationTimes,function(x) sum(permutationEnergys[[x]][[countWeight]] <= energyTrue))
       temp2 <- sapply(1:permutationTimes,function(x) length(permutationEnergys[[x]][[countWeight]]))
       summaryFDR[FDRIndex, 1] <- (sum(temp1)+1)/(sum(temp2)+1)
@@ -278,8 +278,14 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
     summary <- cbind(summary, summaryFDR)
     
     ## switch column orders
-    summary2 <- cbind(summary[,1:4], summary[,c("p_value","FDR")], 
-      summary[,5:13])
+    summary2 <- cbind(summary[,1:5], summary[,c("p_value","FDR")], 
+      summary[,6:14])
+
+    if(direction == "forward"){
+      summary2[, 1] <- paste("H", seq(1, nrow(summary2)), sep="")
+    }else{
+      summary2[, 1] <- paste("L", seq(1, nrow(summary2)), sep="")
+    }
         
     #########criterions including FDR and size of the module    
     ## consider all repeats
