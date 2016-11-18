@@ -3,7 +3,7 @@
 \alias{example}
 \title{exmaple database}
 \description{
-This data is a list of pathways
+This data is an example dataset.
 }
 \usage{data(example)}
 \keyword{datasets}
