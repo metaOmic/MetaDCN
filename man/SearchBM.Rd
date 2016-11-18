@@ -8,44 +8,27 @@ SearchBM(GeneNetRes, MCSteps = 500, jaccardCutoff = 0.8, repeatTimes = 10,
   outputFigure = TRUE, silent = FALSE)
 }
 \arguments{
-\item{GeneNetRes}{a list from GeneNet function.}
+\item{GeneNetRes}{a list from GeneNet function}
 
 \item{MCSteps}{a number to specify the maximum number of MC steps for 
-simulated annealing. Large number will be time-consuming.}
+simulated annealing}
 
 \item{jaccardCutoff}{a number to specify the maximum jaccard index allowed 
-between basic modules.}
+between basic modules}
 
 \item{repeatTimes}{a number to specify how many repeats of different seeds 
-to be used. Large number will be time-consuming.}
+to be used}
 
-\item{outputFigure}{TRUE/FALSE to specify if figures are generated.}
+\item{outputFigure}{TRUE/FALSE to specify if figures are generated}
 
-\item{silent}{TRUE/FALSE to specify if suppress screen output.}
+\item{silent}{TRUE/FALSE to specify if suppress screen output}
 }
 \value{
-SearchBM will return a list and several Rdata, csv and png files
-saved in the folder path specified in GeneNet inputs.
-
-List of basic module information:
-\item{w1 }{w1 weight with the most basic modules detected}
-\item{BMInCase}{data matrix listing the information of basic modules
-higher correlated in case}
-\item{BMInControl}{data matrix listing the information of basic 
-modules higher correlated in control}
-
-permutation_energy_direction_p.Rdata is a list of energies of 
-basic modules from permutation p.
-
-basic_modules_summary_direction_weight_w.csv is a summary of basic
-modules detected using weight w in forward/backward search.
-
-threshold_direction.csv is a table listing number of basic modules 
-detected under different FDRs in forward/backward search.
-
-figure_basic_module_c_repeat_r_direction_weight_w.png is a plot of
-basic module from component c repeat r using weight w in 
-forward/backward search.
+Several Rdata, csv and png files saved in the current working directory
+\item{outputPrefix_permutation_energy_direction_p.Rdata}{A list of energies of basic modules from permutation p}
+\item{outputPrefix_basic_modules_summary_direction_weight_w.csv }{A summary of basic modules found using weight w in forward/backward search}
+\item{outputPrefix_threshold_direction.csv }{A table listing number of basic modules found under different FDRs in forward/backward search}
+\item{outputPrefix_figure_basic_module_c_repeat_r_direction_weight_w.png }{Plot of basic module from component c from repeat r using weight w in forward/backward search}
 }
 \description{
 Search for differentially co-expressed basic modules
@@ -54,7 +37,10 @@ Search for differentially co-expressed basic modules
 This function will search for basic modules differentially co-expressed 
 between case and control
 }
+\examples{
+data(pathwayDatabase)
+}
 \author{
-Li Zhu (liz86@pitt.edu)
+Li Zhu
 }
 
