@@ -29,7 +29,7 @@ ModuleSearch<-function(direction, MCSteps, permutationTimes, repeatTimes,
   ###1. use the real datasets
   ##############################
   pathwayDatabase <- pathwayDatabase[sapply(pathwayDatabase,length)<250]
-  load(paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
+  load(paste(folder, "/AdjacencyMatrices.Rdata", sep=""))
   data <- adjAll
   studyNum <- length(data)/2
   studyName <- c(paste(caseName, 1:studyNum), paste(controlName, 1:studyNum))

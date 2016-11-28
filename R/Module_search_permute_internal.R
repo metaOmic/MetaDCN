@@ -17,7 +17,7 @@ ModuleSearchPermutation <- function(direction, MCSteps, permutationTimes,repeatT
   options(stringsAsFactors = FALSE)
   set.seed(1234)
   
-  load(paste(folder, "/AdjacencyMatricePermutation", permuteIndex, 
+  load(paste(folder, "/AdjacencyMatricesPermutation", permuteIndex, 
     ".Rdata", sep=""))
 
   data <- adjAll

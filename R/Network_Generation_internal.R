@@ -125,12 +125,12 @@ NetworkGeneration <- function(data, caseIndex, controlIndex, caseStudyIndex,
 
   if (choose == "real") {
     save(adjAll, genes, caseStudyIndex, controlStudyIndex, 
-      file=paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
+      file=paste(folder, "/AdjacencyMatrices.Rdata", sep=""))
     save(corAll, genes, caseStudyIndex, controlStudyIndex, 
-      file=paste(folder, "/CorrelationMatrice.Rdata", sep=""))
+      file=paste(folder, "/CorrelationMatrices.Rdata", sep=""))
   }else if (choose == "permute") {
     save(adjAll, genes, caseStudyIndex, controlStudyIndex, 
-      file=paste(folder, "/AdjacencyMatricePermutation", 
+      file=paste(folder, "/AdjacencyMatricesPermutation", 
         permuteIndex, ".Rdata", sep=""))
   }  
     

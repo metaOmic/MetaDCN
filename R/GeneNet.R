@@ -1,10 +1,10 @@
-##' Generate correction and adjacency matrice for data and permutation
+##' Generate correction and adjacency matrices for data and permutation
 ##'
-##' This function will generate correction and adjacency matrix for data and 
+##' This function will generate correction and adjacency matrices for data and 
 ##' permutations.
 ##'
 ##' @title GeneNet
-##' @param data a list of matrice (studies) with rows as features and columns 
+##' @param data a list of matrices (studies) with rows as features and columns 
 ##' as samples.
 ##' @param labels a list of vectors to specify the case/control labels for 
 ##' each subject corresponidng to the columns in each data matrix.
@@ -28,19 +28,18 @@
 ##' SearchBM and MetaDCN function, and several RData files stored in folder 
 ##' path. 
 ##' @return List of basic informations for SearchBM and MetaDCN input:
-##' \item{caseName }{case names from arguments}
-##' \item{controlName }{control names from arguments}
-##' \item{permutationTimes }{permutation times from arguments}
-##' \item{folder }{folder path from arguments}
-##' \item{pathwayDatabase }{a list of pathways from arguments}
+##' \item{caseName }{case names}
+##' \item{controlName }{control names}
+##' \item{permutationTimes }{permutation times}
+##' \item{folder }{folder path}
+##' \item{pathwayDatabase }{a list of pathways}
 ##' \item{CPUNumbers }{CPU numbers from arguments}
-##' @return AdjacencyMatrice.RData is a list of adjacency matrice for case and 
-##' control in each study in the order of case studies and control studies.
-##' @return CorrelationMatrice.RData is a list of correlation matrice for case 
+##' @return AdjacencyMatrices.RData is a list of adjacency matrices for case 
 ##' and control in each study in the order of case studies and control studies.
-##' @return AdjacencyMatricePermutationP.RData is a list of correlation 
-##' matrice for case and control in each study in the order of case studies 
-##' and control studies for permutation P.
+##' @return CorrelationMatrices.RData is a list of correlation matrices for 
+##' case and control in each study.
+##' @return AdjacencyMatricesPermutationP.RData is a list of correlation 
+##' matrices for case and control in each study in permutation P.
 ##' @author Li Zhu (liz86@pitt.edu)
 ##' @import snow
 ##' @import snowfall

@@ -51,8 +51,8 @@ ModuleAssembly <- function(weightChosen, FDRCutoff, caseName, controlName,
     strsplit(x, split="/")[[1]])
   moduleListAll <- c(moduleList, moduleList1)  # combine forward and backward
   
-  load(paste(folder, "/AdjacencyMatrice.Rdata", sep=""))
-  load(paste(folder, "/CorrelationMatrice.Rdata", sep=""))
+  load(paste(folder, "/AdjacencyMatrices.Rdata", sep=""))
+  load(paste(folder, "/CorrelationMatrices.Rdata", sep=""))
   data <- adjAll
   studyNum <- length(data)/2
   studyName <- c(paste(caseName, 1:studyNum), paste(controlName, 1:studyNum))
